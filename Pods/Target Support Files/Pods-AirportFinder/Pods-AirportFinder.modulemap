@@ -1,0 +1,6 @@
+framework module Pods_AirportFinder {
+  umbrella header "Pods-AirportFinder-umbrella.h"
+
+  export *
+  module * { export * }
+}

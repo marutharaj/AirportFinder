@@ -1,0 +1,6 @@
+framework module Pods_AirportFinderUITests {
+  umbrella header "Pods-AirportFinderUITests-umbrella.h"
+
+  export *
+  module * { export * }
+}
