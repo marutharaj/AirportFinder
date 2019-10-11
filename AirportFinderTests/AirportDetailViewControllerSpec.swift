@@ -8,6 +8,7 @@
 import Foundation
 import Quick
 import Nimble
+import AFHandy
 
 @testable import AirportFinder
 
@@ -23,8 +24,8 @@ class AirportDetailViewControllerSpec: QuickSpec {
                 let storyboard = UIStoryboard(name: "Main", bundle: nil)
                 subject = storyboard.instantiateViewController(withIdentifier: "AirportDetailViewController") as? AirportDetailViewController
                 
-                let airportAPI = MockAirportHelper()
-                subject?.airport = airportAPI.getAirports().value?.first
+                let airportService = MockAirportService()
+                subject?.airport = airportService.getAirports().value?.first
                 _ = subject?.view
             }
             

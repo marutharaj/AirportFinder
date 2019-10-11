@@ -1,2 +1,3 @@
 ${PODS_ROOT}/Target Support Files/Pods-AirportFinder/Pods-AirportFinder-frameworks.sh
+${BUILT_PRODUCTS_DIR}/AFHandy/AFHandy.framework
 ${BUILT_PRODUCTS_DIR}/PromiseKit/PromiseKit.framework

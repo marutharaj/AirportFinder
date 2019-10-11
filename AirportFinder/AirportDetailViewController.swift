@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import CoreGraphics
+import AFHandy
 
 class AirportDetailViewController: UIViewController {
     
@@ -25,15 +27,13 @@ class AirportDetailViewController: UIViewController {
         setupView()
         setupAccessibilityLabel()
     }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-    }
 }
 
-extension AirportDetailViewController {
+fileprivate extension AirportDetailViewController {
     
-    fileprivate func setupAccessibilityLabel() {
+    // MARK: - Private Methods
+
+    func setupAccessibilityLabel() {
         runwayLengthLabel.accessibilityLabel = "AirportRunwayLengthLabel"
         cityLabel.accessibilityLabel = "AirportCityLabel"
         stateLabel.accessibilityLabel = "AirportStateLabel"
@@ -42,7 +42,7 @@ extension AirportDetailViewController {
         directFlightLabel.accessibilityLabel = "AirportDirectFlightLabel"
     }
     
-    fileprivate func setupView() {
+    func setupView() {
         
         if let topItem = navigationBar?.topItem,
             let airport = airport {
@@ -58,12 +58,12 @@ extension AirportDetailViewController {
         }
     }
     
-    fileprivate func attributedString(boldText: String, normalText: String) -> NSMutableAttributedString {
+    func attributedString(boldText: String, normalText: String) -> NSMutableAttributedString {
         
-        let boldAttributes = [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 16)]
+        let boldAttributes = [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: CGFloat(AirportFinderFont.boldSize))]
         let attributedString = NSMutableAttributedString(string: boldText, attributes: boldAttributes)
         
-        let normalAttributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 15)]
+        let normalAttributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: CGFloat(AirportFinderFont.regularSize))]
         let normalString = NSMutableAttributedString(string: normalText, attributes: normalAttributes)
         
         attributedString.append(normalString)
@@ -73,6 +73,8 @@ extension AirportDetailViewController {
 
 extension AirportDetailViewController {
     
+    // MARK: - UIBarbutton action handler
+
     @IBAction func airportsButtonAction(sender: UIBarButtonItem) {
         dismiss(animated: true)
     }

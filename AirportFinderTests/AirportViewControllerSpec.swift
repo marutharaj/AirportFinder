@@ -8,6 +8,7 @@
 import Foundation
 import Quick
 import Nimble
+import AFHandy
 
 @testable import AirportFinder
 
@@ -20,14 +21,15 @@ class AirportViewControllerSpec: QuickSpec {
         describe("Verify AirportViewController") {
             
             beforeEach {
+                let airportService = MockAirportService()
                 let storyboard = UIStoryboard(name: "Main", bundle: nil)
                 subject = storyboard.instantiateViewController(withIdentifier: "AirportViewController") as? AirportViewController
                 
                 subject?.airportTableView = UITableView(frame: CGRect.zero)
-                subject?.viewModel = AirportViewModel()
-                let airportAPI = MockAirportHelper()
-                subject?.viewModel.airports = airportAPI.getAirports().value ?? []
-                subject?.viewModel.nearestAirports = subject?.viewModel.airports ?? []
+                subject?.airportHelper = AirportFinderHelper()
+                subject?.viewModel = AirportViewModel(airportHelper: subject?.airportHelper ?? AirportFinderHelper())
+                subject?.airportHelper.airports = airportService.getAirports().value ?? []
+                subject?.airportHelper.nearestAirports = subject?.airportHelper.airports ?? []
             }
             
             context("When setting up the data") {
@@ -37,7 +39,7 @@ class AirportViewControllerSpec: QuickSpec {
                 }
                 
                 it("Should match total airports count with number of rows") {
-                    expect(subject?.viewModel.numberOfRows(in: 0)) == subject?.viewModel.nearestAirports.count
+                    expect(subject?.viewModel.numberOfRows(in: 0)) == subject?.airportHelper.nearestAirports.count
                 }
                 
                 it("Should return a UITableViewCell with airport name") {
@@ -45,14 +47,14 @@ class AirportViewControllerSpec: QuickSpec {
                     let cell = UITableViewCell(style: UITableViewCell.CellStyle.default, reuseIdentifier: "airportCellId")
                     let airportCell = subject?.viewModel.cellForRowAt(indexPath: indexPath, for: cell)
                     expect(airportCell).toNot(beNil())
-                    expect(airportCell?.textLabel?.text).to(equal(subject?.viewModel.nearestAirports[0].name))
+                    expect(airportCell?.textLabel?.text).to(equal(subject?.airportHelper.nearestAirports[0].name))
                 }
             }
             
             context("When search city") {
                 
                 beforeEach {
-                    subject?.viewModel.filterAirports(by: "Dub")
+                    subject?.airportHelper.filterAirports(by: "Dub")
                 }
                 
                 it("Should return correct number of sections") {
@@ -60,7 +62,7 @@ class AirportViewControllerSpec: QuickSpec {
                 }
                 
                 it("Should match cities count with number of rows") {
-                    expect(subject?.viewModel.numberOfRows(in: 0)) == subject?.viewModel.filteredCityAirports.count
+                    expect(subject?.viewModel.numberOfRows(in: 0)) == subject?.airportHelper.filteredCityAirports.count
                 }
                 
                 it("Should return a UITableViewCell with city") {
@@ -68,15 +70,15 @@ class AirportViewControllerSpec: QuickSpec {
                     let cell = UITableViewCell(style: UITableViewCell.CellStyle.default, reuseIdentifier: "airportCellId")
                     let cityCell = subject?.viewModel.cellForRowAt(indexPath: indexPath, for: cell)
                     expect(cityCell).toNot(beNil())
-                    expect(cityCell?.textLabel?.text).to(equal(subject?.viewModel.filteredCityAirports[0].city))
+                    expect(cityCell?.textLabel?.text).to(equal(subject?.airportHelper.filteredCityAirports[0].city))
                 }
             }
             
             context("When select city") {
                 
                 beforeEach {
-                    subject?.viewModel.filterAirports(by: "Dub")
-                    subject?.viewModel.findNearestAirport(by: 3)
+                    subject?.airportHelper.filterAirports(by: "Dub")
+                    subject?.airportHelper.findNearestAirport(by: 3)
                 }
                 
                 it("Should return correct number of sections") {
@@ -84,7 +86,7 @@ class AirportViewControllerSpec: QuickSpec {
                 }
                 
                 it("Should match nearest airports count with number of rows") {
-                    expect(subject?.viewModel.numberOfRows(in: 0)) == subject?.viewModel.nearestAirports.count
+                    expect(subject?.viewModel.numberOfRows(in: 0)) == subject?.airportHelper.nearestAirports.count
                 }
                 
                 it("Should return a UITableViewCell with airport name") {
@@ -92,7 +94,7 @@ class AirportViewControllerSpec: QuickSpec {
                     let cell = UITableViewCell(style: UITableViewCell.CellStyle.default, reuseIdentifier: "airportCellId")
                     let airportCell = subject?.viewModel.cellForRowAt(indexPath: indexPath, for: cell)
                     expect(airportCell).toNot(beNil())
-                    expect(airportCell?.textLabel?.text).to(equal(subject?.viewModel.nearestAirports[0].name))
+                    expect(airportCell?.textLabel?.text).to(equal(subject?.airportHelper.nearestAirports[0].name))
                 }
             }
         }

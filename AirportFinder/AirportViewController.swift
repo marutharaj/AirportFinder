@@ -6,26 +6,29 @@
 //
 
 import UIKit
+import AFHandy
 
 class AirportViewController: UIViewController {
     
     @IBOutlet var airportTableView: UITableView!
     @IBOutlet weak var searchBar: UISearchBar!
     
-    var viewModel: AirportViewModelProtocol! {
+    var airportHelper: AirportFinderProtocol! {
         didSet {
             
-            viewModel.didReceiveAirport = { [unowned self] viewModel in
+            airportHelper.didReceiveAirport = { [unowned self] airportHelper in
                 self.activityIndicator.removeFromSuperview()
                 self.airportTableView.reloadData()
             }
             
-            viewModel.didFailReceiveAirport = { [unowned self] error in
+            airportHelper.didFailReceiveAirport = { [unowned self] error in
                 self.activityIndicator.removeFromSuperview()
                 self.showAlert(message: "Unable to get airports")
             }
         }
     }
+    
+    var viewModel: AirportViewModelProtocol!
     
     private let activityIndicator = UIActivityIndicatorView(style: .gray)
 }
@@ -37,17 +40,9 @@ extension AirportViewController {
         // Do any additional setup after loading the view.
         setupAccessibilityLabel()
         showActivityIndicator()
-        viewModel = AirportViewModel()
-        viewModel.getAirports()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-    }
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+        airportHelper = AirportFinderHelper()
+        viewModel = AirportViewModel(airportHelper: airportHelper)
+        airportHelper.getAirports()
     }
     
     // MARK: - Navigation
@@ -57,33 +52,33 @@ extension AirportViewController {
             searchBar.resignFirstResponder()
             let viewController = segue.destination as? AirportDetailViewController
             let airportIndex = airportTableView.indexPathForSelectedRow!.row
-            viewController?.airport = viewModel.nearestAirports[airportIndex]
+            viewController?.airport = airportHelper.nearestAirports[airportIndex]
         }
     }
     
     override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
-        let shouldPerformSegue = viewModel.shouldShowCities
-        if viewModel.shouldShowCities {
+        let shouldPerformSegue = airportHelper.shouldShowCities
+        if airportHelper.shouldShowCities {
             let indexPath = airportTableView.indexPathForSelectedRow!
-            viewModel.findNearestAirport(by: indexPath.row)
+            airportHelper.findNearestAirport(by: indexPath.row)
         }
         
         return !shouldPerformSegue
     }
 }
 
-extension AirportViewController {
+fileprivate extension AirportViewController {
     
     // MARK: - Private Methods
     
-    fileprivate func setupAccessibilityLabel() {
+    func setupAccessibilityLabel() {
         airportTableView.accessibilityLabel = "AirportTableView"
         searchBar.accessibilityIdentifier = "CitySearchBar"
         searchBar.accessibilityLabel = "CitySearchBar"
         searchBar.accessibilityTraits = UIAccessibilityTraits.searchField
     }
     
-    fileprivate func showActivityIndicator() {
+    func showActivityIndicator() {
         // Add it to the view where you want it to appear
         view.addSubview(activityIndicator)
         
@@ -93,7 +88,7 @@ extension AirportViewController {
         activityIndicator.startAnimating()
     }
     
-    fileprivate func showAlert(message: String) {
+    func showAlert(message: String) {
         
         let alert = UIAlertController(title: "AirportFinder",
                                       message: message,
@@ -108,6 +103,8 @@ extension AirportViewController {
 }
 
 extension AirportViewController: UITableViewDataSource, UITableViewDelegate {
+    
+    // MARK: - Airport table view delegate
     
     func numberOfSections(in tableView: UITableView) -> Int {
         return viewModel.numberOfSections()
@@ -126,12 +123,14 @@ extension AirportViewController: UITableViewDataSource, UITableViewDelegate {
 
 extension AirportViewController: UISearchBarDelegate {
     
+    // MARK: - Search bar delegate
+
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
-        viewModel.shouldShowCities = true
+        airportHelper.shouldShowCities = true
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        viewModel.filterAirports(by: searchText)
+        airportHelper.filterAirports(by: searchText)
     }
 }

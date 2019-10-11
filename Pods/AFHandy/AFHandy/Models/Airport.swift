@@ -1,34 +1,35 @@
 //
 //  Airport.swift
-//  AirportFinder
+//  AFHandy
 //
-//  Created by mac on 10/4/19.
+//  Created by mac on 10/11/19.
+//  Copyright © 2019 mac. All rights reserved.
 //
 
 import Foundation
 import CoreLocation
 
-struct Airport: Codable, Hashable {
+public struct Airport: Codable, Hashable {
     
-    let code: String
-    let lat: String
-    let lon: String
-    let name: String
-    let city: String
-    let state: String
-    let country: String
-    let woeid: String
-    let timezone: String
-    let phone: String
-    let type: String
-    let email: String
-    let url: String
-    let runwayLength: String
-    let elev: String
-    let icao: String
-    let directFlights: String
-    let carriers: String
-    let location: CLLocation
+    public let code: String
+    public let lat: String
+    public let lon: String
+    public let name: String
+    public let city: String
+    public let state: String
+    public let country: String
+    public let woeid: String
+    public let timezone: String
+    public let phone: String
+    public let type: String
+    public let email: String
+    public let url: String
+    public let runwayLength: String
+    public let elev: String
+    public let icao: String
+    public let directFlights: String
+    public let carriers: String
+    public let location: CLLocation
     
     private enum CodingKeys: String, CodingKey {
         case code
@@ -51,7 +52,7 @@ struct Airport: Codable, Hashable {
         case carriers
     }
     
-    init(from decoder: Decoder) throws {
+    public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         code = try container.decode(String.self, forKey: .code)
         lat = try container.decode(String.self, forKey: .lat)
@@ -76,7 +77,7 @@ struct Airport: Codable, Hashable {
     }
 }
 
-extension Airport {
+public extension Airport {
     
     func hash(into hasher: inout Hasher) {
         city.hash(into: &hasher)

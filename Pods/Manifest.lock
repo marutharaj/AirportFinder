@@ -1,4 +1,7 @@
 PODS:
+  - AFHandy (0.1.0):
+    - PromiseKit (~> 6.0)
+    - SwiftLint
   - Nimble (7.3.3)
   - PromiseKit (6.11.0):
     - PromiseKit/CorePromise (= 6.11.0)
@@ -13,6 +16,7 @@ PODS:
   - SwiftLint (0.35.0)
 
 DEPENDENCIES:
+  - AFHandy
   - Nimble (= 7.3.3)
   - PromiseKit (~> 6.0)
   - Quick
@@ -24,13 +28,16 @@ SPEC REPOS:
     - PromiseKit
     - Quick
     - SwiftLint
+  https://github.com/marutharaj/AFPodSpecs.git:
+    - AFHandy
 
 SPEC CHECKSUMS:
+  AFHandy: b4ab5284847e403ebf135fc961f85a150c714c70
   Nimble: 3b434b1e7d0a92603a13550a82880b0d952f518e
   PromiseKit: e4863d06976e7dee5e41c04fc7371c16b3600292
   Quick: 7fb19e13be07b5dfb3b90d4f9824c855a11af40e
   SwiftLint: 5553187048b900c91aa03552807681bb6b027846
 
-PODFILE CHECKSUM: d086c8f042d5664f8eb918da8c82867bbca793c7
+PODFILE CHECKSUM: ab385c651229a3d3b3314ab9aca7618b45636410
 
 COCOAPODS: 1.7.5

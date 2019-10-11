@@ -1,14 +1,17 @@
 //
-//  AirportFinderExtension.swift
-//  AirportFinder
+//  AFHandyExtensions.swift
+//  AFHandy
 //
-//  Created by mac on 10/4/19.
+//  Created by mac on 10/11/19.
+//  Copyright © 2019 mac. All rights reserved.
 //
 
 import Foundation
 
 extension String {
-    public func toDouble() -> Double? {
+    
+    internal func toDouble() -> Double? {
+        
         if let num = NumberFormatter().number(from: self) {
             return num.doubleValue
         } else {
@@ -18,8 +21,12 @@ extension String {
 }
 
 extension Sequence where Iterator.Element: Hashable {
-    func unique() -> [Iterator.Element] {
+    
+    /// Remove duplicate cities
+    internal func unique() -> [Iterator.Element] {
+        
         var seen = Set<Iterator.Element>()
+        
         return filter { seen.update(with: $0) == nil }
     }
 }
